@@ -14,7 +14,6 @@ const studentSchema = new Schema({
   studentId:  { type: Schema.Types.ObjectId, ref: 'users' },
   name:       { type: String, required: true },
   picture:    {type: String, required:true}
-
 });
 
 const batchSchema = new Schema({
