@@ -1,11 +1,11 @@
 const batches = require('./batches')
 const users = require('./users')
 const sessions = require('./sessions')
-const gamePlayers = require('./games/players')
+const batchStudents = require('./batches/students')
 
 module.exports = {
-  games,
+  batches,
   users,
   sessions,
-  gamePlayers,
+  batchStudents ,
 }
