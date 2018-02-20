@@ -10,6 +10,41 @@ const createUrl = (path) => {
   return `${process.env.HOST || `http://localhost:${process.env.PORT || 3030}`}${path}`
 }
 
+
+const createEvaluations = (token, studentId) => {
+
+  var rand = Math.floor(Math.random() * evaluations.length);
+  let evaluation = evaluations[rand]
+
+  return request
+  .post(createUrl(`/students/${studentId}/evaluations`))
+  .set('Authorization', `Bearer ${token}`)
+  .send(evaluation)
+  .then((res) => {
+    console.log('Evaluation ' + res.body.color + ' seeded for student ' + res.body.name)
+  })
+  .catch((err) => {
+    console.error('Error seeding evaluations!', err)
+  })
+}
+
+const createStudents = (token, batchId) => {
+  return students.map((student) => {
+    student.batchId = batchId
+    return request
+    .post(createUrl(`/batches/${batchId}/students`))
+    .set('Authorization', `Bearer ${token}`)
+    .send(student)
+    .then((res) => {
+      console.log('Student ' + res.body.name + ' seeded in class ' + res.body.classNumber)
+      return createEvaluations(token, res.body._id)
+    })
+    .catch((err) => {
+      console.error('Error seeding students!', err)
+    })
+  })
+}
+
 const createBatches = (token) => {
   return batches.map((batch) => {
     return request
@@ -17,40 +52,11 @@ const createBatches = (token) => {
     .set('Authorization', `Bearer ${token}`)
     .send(batch)
     .then((res) => {
-      console.log('Batches seeded...', res.body.title)
+      console.log('Batch seeded...', res.body)
+      return createStudents(token, res.body._id)
     })
     .catch((err) => {
       console.error('Error seeding batches!', err)
-    })
-  })
-}
-
-const createEvaluations = (token) => {
-  return evaluations.map((evaluation) => {
-    return request
-    .post(createUrl('/evaluations'))
-    .set('Authorization', `Bearer ${token}`)
-    .send(evaluation)
-    .then((res) => {
-      console.log('Evaluations seeded...', res.body.title)
-    })
-    .catch((err) => {
-      console.error('Error seeding evaluations!', err)
-    })
-  })
-}
-
-const createStudents = (token) => {
-  return students.map((student) => {
-    return request
-    .post(createUrl('/students'))
-    .set('Authorization', `Bearer ${token}`)
-    .send(student)
-    .then((res) => {
-      console.log('Students seeded...', res.body.title)
-    })
-    .catch((err) => {
-      console.error('Error seeding students!', err)
     })
   })
 }
@@ -61,6 +67,7 @@ const authenticate = (email, password) => {
   .send({ email, password })
   .then((res) => {
     console.log('Authenticated!')
+    return createBatches(res.body.token)
   })
   .catch((err) => {
     console.error('Failed to authenticate!', err.message)
