@@ -1,8 +1,10 @@
+const mongoose = require('../config/database')
 const request = require('superagent')
 const user = require('./fixtures/user.json')
 const students = require('./fixtures/students.json')
 const batches = require('./fixtures/batches.json')
 const evaluations = require('./fixtures/evaluations.json')
+
 
 const createUrl = (path) => {
   return `${process.env.HOST || `http://localhost:${process.env.PORT || 3030}`}${path}`
@@ -59,7 +61,6 @@ const authenticate = (email, password) => {
   .send({ email, password })
   .then((res) => {
     console.log('Authenticated!')
-    return createEvaluations(res.body.token)
   })
   .catch((err) => {
     console.error('Failed to authenticate!', err.message)
