@@ -1,34 +1,33 @@
 // routes/games.js
 const router = require('express').Router()
 const passport = require('../config/auth')
-const { Game } = require('../models')
-const utils = require('../lib/utils')
-const processMove = require('../lib/processMove')
+const { Batch, User } = require('../models')
+
 
 const authenticate = passport.authorize('jwt', { session: false })
 
 module.exports = io => {
   router
-    .get('/games', (req, res, next) => {
-      Game.find()
+    .get('/batches', (req, res, next) => {
+      Batch.find()
         // Newest games first
         .sort({ createdAt: -1 })
         // Send the data in JSON format
-        .then((games) => res.json(games))
+        .then((batches) => res.json(batches))
         // Throw a 500 error if something goes wrong
         .catch((error) => next(error))
     })
-    .get('/games/:id', (req, res, next) => {
+    .get('/batches/:id', (req, res, next) => {
       const id = req.params.id
 
-      Game.findById(id)
-        .then((game) => {
-          if (!game) { return next() }
-          res.json(game)
+      Batch.findById(id)
+        .then((batch) => {
+          if (!batch) { return next() }
+          res.json(batch)
         })
         .catch((error) => next(error))
     })
-    .post('/games', authenticate, (req, res, next) => {
+    .post('/batches', authenticate, (req, res, next) => {
       const newGame = {
         userId: req.account._id,
         players: [{
@@ -36,44 +35,44 @@ module.exports = io => {
         }]
       }
 
-      Game.create(newGame)
-        .then((game) => {
+      Batch.create(newBatch)
+        .then((batch) => {
           io.emit('action', {
-            type: 'GAME_CREATED',
-            payload: game
+            type: 'BATCH_CREATED',
+            payload: batch
           })
-          res.json(game)
+          res.json(batch)
         })
         .catch((error) => next(error))
     })
-    .patch('/games/:id', authenticate, (req, res, next) => {
+    .patch('/batches/:id', authenticate, (req, res, next) => {
       const id = req.params.id
       const userId = req.account._id.toString()
 
-      Game.findById(id)
-        .then((game) => {
-          if (!game) { return next() }
+      Batch.findById(id)
+        .then((batch) => {
+          if (!batch) { return next() }
 
-          const updatedGame = processMove(game, req.body, userId)
+          // const updatedGame = processMove(game, req.body, userId)
 
-          Game.findByIdAndUpdate(id, { $set: updatedGame }, { new: true })
-            .then((game) => {
+          Batch.findByIdAndUpdate(id, { $set: updatedBatch }, { new: true })
+            .then((batch) => {
               io.emit('action', {
-                type: 'GAME_UPDATED',
-                payload: game
+                type: 'BATCH_UPDATED',
+                payload: batch
               })
-              res.json(game)
+              res.json(batch)
             })
             .catch((error) => next(error))
         })
         .catch((error) => next(error))
     })
-    .delete('/games/:id', authenticate, (req, res, next) => {
+    .delete('/batches/:id', authenticate, (req, res, next) => {
       const id = req.params.id
-      Game.findByIdAndRemove(id)
+      Batch.findByIdAndRemove(id)
         .then(() => {
           io.emit('action', {
-            type: 'GAME_REMOVED',
+            type: 'BATCH_REMOVED',
             payload: id
           })
           res.status = 200
