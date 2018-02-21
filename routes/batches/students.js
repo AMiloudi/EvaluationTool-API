@@ -52,6 +52,29 @@ module.exports = io => {
     .catch((error) => next(error))
   })
 
+  .patch('/batches/:id/students/:studentId', authenticate, (req, res, next) => {
+    const studentId = req.params.studentId
+
+    Student.findById(studentId)
+      .then((student) => {
+        if (!student) { return next() }
+
+        const updatedStudent = {
+          name: req.body.name,
+          picture:  req.body.picture,
+          batchId:  req.batch._id,
+        }
+
+        Student.findByIdAndUpdate(studentId, updatedStudent, { new: true })
+          .then((student) => {
+            res.json(student)
+          })
+          .catch((error) => next(error))
+      })
+      .catch((error) => next(error))
+  })
+
+
   .delete('/batches/:id/students/:studentId', authenticate, (req, res, next) => {
     const studentId = req.params.studentId
 
@@ -60,7 +83,7 @@ module.exports = io => {
       res.status = 200
       res.json({
         message: 'Removed',
-        _id: id
+        _id: studentId
       })
     })
     .catch((error) => next(error))

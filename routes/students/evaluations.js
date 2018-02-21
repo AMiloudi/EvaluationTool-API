@@ -53,6 +53,30 @@ module.exports = io => {
     .catch((error) => next(error))
   })
 
+  .patch('/students/:id/evaluations/:evaluationId', authenticate, (req, res, next) => {
+      const evaluationId = req.params.evaluationId
+
+    Evaluation.findById(evaluationId)
+      .then((evaluation) => {
+        if (!evaluation) { return next() }
+
+        const updatedEvaluation = {
+          studentId: req.student._id,
+          evalDate:  req.body.evalDate,
+          color:  req.body.color,
+          remarks: req.body.remarks
+        }
+
+        Evaluation.findByIdAndUpdate(evaluationId, updatedEvaluation, { new: true })
+          .then((evaluation) => {
+            res.json(evaluation)
+          })
+          .catch((error) => next(error))
+      })
+      .catch((error) => next(error))
+  })
+
+
   .delete('/students/:id/evaluations/:evaluationId', authenticate, (req, res, next) => {
     const evaluationId = req.params.evaluationId
 
@@ -61,7 +85,7 @@ module.exports = io => {
       res.status = 200
       res.json({
         message: 'Removed',
-        _id: id
+        _id: evaluationId
       })
     })
     .catch((error) => next(error))
