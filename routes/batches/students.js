@@ -1,7 +1,7 @@
-// routes/games.js
+
 const router = require('express').Router()
 const passport = require('../../config/auth')
-const { Batch, User } = require('../../models')
+const { Batch, Student } = require('../../models')
 
 const authenticate = passport.authorize('jwt', { session: false })
 
@@ -9,108 +9,86 @@ const loadBatch = (req, res, next) => {
   const id = req.params.id
 
   Batch.findById(id)
-    .then((batch) => {
-      req.batch = batch
-      next()
-    })
-    .catch((error) => next(error))
+  .then((batch) => {
+    req.batch = batch
+    next()
+  })
+  .catch((error) => next(error))
 }
 
 const getStudents = (req, res, next) => {
-  Promise.all(req.batch.students.map(student => User.findById(student.userId)))
-    .then((users) => {
-      // Combine player data and user's name
-      req.students = req.batch.students.map((student) => {
-        const { name } = users
-          .filter((u) => u._id.toString() === student.userId.toString())[0]
+  const batchId= req.batch._id
+  Student.find({
+    batchId: batchId
+  })
+  .then((students) => {
+    req.students = students
+    next()
+  })
+  .catch((error) => next(error))
 
-        return {
-          userId: student.userId,
-          picture,
-          name
-        }
-      })
-      next()
-    })
-    .catch((error) => next(error))
 }
 
 module.exports = io => {
   router
-    .get('/batches/:id/students', loadBatch, getStudents, (req, res, next) => {
-      if (!req.batch || !req.students) { return next() }
-      res.json(req.students)
+  .get('/batches/:id/students', loadBatch, getStudents, (req, res, next) => {
+    if (!req.batch || !req.students) { return next() }
+    res.json(req.students)
+  })
+
+  .post('/batches/:id/students', authenticate, loadBatch, (req, res, next) => {
+    if (!req.batch) { return next() }
+
+    const newStudent= {
+      name: req.body.name,
+      picture:  req.body.picture,
+      batchId:  req.batch._id,
+    }
+
+    Student.create(newStudent)
+    .then((student) => {
+      res.json(student)
     })
+    .catch((error) => next(error))
+  })
 
-    .post('/batches/:id/students', authenticate, loadBatch, (req, res, next) => {
-      if (!req.batch) { return next() }
+  .patch('/batches/:id/students/:studentId', authenticate, (req, res, next) => {
+    const studentId = req.params.studentId
 
-      const userId = req.account._id
+    Student.findById(studentId)
+      .then((student) => {
+        if (!student) { return next() }
 
-      if (req.batch.students.filter((s) => s.userId.toString() === userId.toString()).length > 0) {
-        const error = Error.new('This student is already part of the batch')
-        error.status = 401
-        return next(error)
-      }
-
-      // Add the user to the players
-      req.batch.students = [...req.batch.students, { userId }]
-
-      req.batch.save()
-        .then((batch) => {
-          req.batch = batch
-          next()
-        })
-        .catch((error) => next(error))
-    },
-    // Fetch new player data
-    getStudents,
-    // Respond with new player data in JSON and over socket
-    (req, res, next) => {
-      io.emit('action', {
-        type: 'BATCH_STUDENTS_UPDATED',
-        payload: {
-          batch: req.batch,
-          students: req.students
+        const updatedStudent = {
+          name: req.body.name,
+          picture:  req.body.picture,
+          batchId:  req.batch._id,
         }
+
+        Student.findByIdAndUpdate(studentId, updatedStudent, { new: true })
+          .then((student) => {
+            res.json(student)
+          })
+          .catch((error) => next(error))
       })
-      res.json(req.students)
-    })
+      .catch((error) => next(error))
+  })
 
-    .delete('/batches/:id/students', authenticate, (req, res, next) => {
-      if (!req.batch) { return next() }
 
-      const userId = req.account._id
-      const currentStudent = req.batch.students.filter((s) => s.userId.toString() === userId.toString())[0]
+  .delete('/batches/:id/students/:studentId', authenticate, (req, res, next) => {
+    const studentId = req.params.studentId
 
-      if (!currentStudent) {
-        const error = Error.new('This student is not part of this Batch')
-        error.status = 401
-        return next(error)
-      }
-
-      req.batch.students = req.batch.students.filter((s) => s.userId.toString() !== userId.toString())
-      req.batch.save()
-        .then((batch) => {
-          req.batch = batch
-          next()
-        })
-        .catch((error) => next(error))
-
-    },
-    // Fetch new player data
-    getStudents,
-    // Respond with new player data in JSON and over socket
-    (req, res, next) => {
-      io.emit('action', {
-        type: 'BATCH_STUDENTS_UPDATED',
-        payload: {
-          batch: req.batch,
-          students: req.students
-        }
+    Student.findByIdAndRemove(studentId)
+    .then(() => {
+      res.status = 200
+      res.json({
+        message: 'Removed',
+        _id: studentId
       })
-      res.json(req.students)
     })
+    .catch((error) => next(error))
+  })
+
 
   return router
 }

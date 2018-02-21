@@ -2,11 +2,11 @@ const mongoose = require('../config/database')
 const { Schema } = mongoose
 
 
-const rankingSchema= new Schema({
+const evaluationSchema= new Schema({
   studentId:  { type: Schema.Types.ObjectId, ref: 'students' },
-  rankDate:   { type: Date, required: true},
+  evalDate:   { type: Date, required: true},
   color:      { type: String, default: 'Red'},
   remarks:    { type: String}
 });
 
-module.exports = mongoose.model('evaluations', rankingSchema)
+module.exports = mongoose.model('evaluations', evaluationSchema)

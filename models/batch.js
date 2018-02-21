@@ -3,7 +3,7 @@ const { Schema } = mongoose
 
 
 const batchSchema = new Schema({
-  classNumber:  {type: Number, required:true},
+  classNumber:  {type: String, required:true},
   startDate:    { type: Date, required: true},
   endDate:      { type: Date, required: true},
 });

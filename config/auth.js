@@ -7,7 +7,7 @@ const jwtOptions = require('./jwt')
 
 const tokenStrategy = new Strategy(jwtOptions, (jwtPayload, done) => {
   console.log('payload received', jwtPayload)
-  
+
   User.findById(jwtPayload.id)
     .then((user) => {
       if (user) {
@@ -17,7 +17,9 @@ const tokenStrategy = new Strategy(jwtOptions, (jwtPayload, done) => {
         done(null, false)
       }
     })
-    .catch((err) => done(err, false))
+    .catch((err) => {
+      console.log(err)
+      done(err, false)})
 })
 
 passport.use(User.createStrategy())
