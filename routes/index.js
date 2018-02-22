@@ -5,6 +5,7 @@ const sessions = require('./sessions')
 const students = require('./students')
 const studentEvaluations = require('./students/evaluations')
 const evaluations = require('./evaluations')
+const batchEvaluations = require('./batches/evaluations')
 
 module.exports = {
   batches,
@@ -13,5 +14,6 @@ module.exports = {
   sessions,
   students,
   studentEvaluations,
-  evaluations
+  evaluations,
+  batchEvaluations
 }
