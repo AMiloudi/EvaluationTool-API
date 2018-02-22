@@ -1,6 +1,6 @@
-# Express Games API
+# Evaluations Tool API
 
-RESTful Express API for Games on top of MongoDB.
+RESTful Express API for Evaluations on top of MongoDB.
 
 ## Authentication
 
@@ -18,7 +18,6 @@ Use the following endpoints to deal with initial authentication and the user.
 |-----------|-------------|--------------|
 | `POST`    | `/users`    | Create a user account |
 | `POST`    | `/sessions` | Log in with email and password, and retrieve a JWT token |
-| `GET`     | `/users/me` | Retrieve own user data |
 
 To authorize further requests, use Bearer authentication with the provided JWT token:
 
@@ -28,18 +27,46 @@ Authorization: Bearer <token here>
 
 _**Note**: See `db/seed.js` for an example._
 
-## Games
+## Batches
 
-**Note:** See `models/game.js` for the Game schema attributes.
+**Note:** See `models/batch.js` for the Batch schema attributes.
 
 | HTTP Verb | Path | Description |
 |-----------|------|--------------|
-| `GET` | `/games` | Retrieve all games |
-| `POST` | `/games` | Create a game* |
-| `GET` | `/games/:id` | Retrieve a single game by it's `id` |
-| `PUT` | `/games/:id` | Update a game with a specific `id`* |
-| `PATCH` | `/games/:id` | Patch (partial update) a game with a specific `id`* |
-| `DELETE` | `/games/:id` | Destroy a single game by it's `id`* |
+| `GET` | `/batches` | Retrieve all batches |
+| `POST` | `/batches` | Create a batch* |
+| `GET` | `/batches/:batchId` | Retrieve a single batch by it's `batchId` |
+| `PUT` | `/batches/:batchId` | Update a batch with a specific `batchId`* |
+| `PATCH` | `/batches/:batchId` | Patch (partial update) a batch with a specific `batchId`* |
+| `DELETE` | `/batches/:batchId` | Destroy a single batch by it's `batchId`* |
 | | | _* Needs authentication_ |
 
-_**Note**: Run `yarn run seed` to seed some initial games._
+## Students
+
+**Note:** See `models/student.js` for the Student schema attributes.
+
+| HTTP Verb | Path | Description |
+|-----------|------|--------------|
+| `GET` | `/batches/:batchId/students` | Retrieve all students for a specific `batchId` |
+| `POST` | `/batches/:batchId/students` | Create a student for a specific `batchId`* |
+| `GET` | `/batches/:batchId/students/:studentId` | Retrieve a single student by it's `studentId` and `batchId` |
+| `PUT` | `/batches/:batchId/students/:studentId` | Update a student with a specific `studentId` and `batchId`* |
+| `PATCH` | `/batches/:batchId/students/:studentId` | Patch (partial update) a student with a specific `studentId` and `batchId`* |
+| `DELETE` | `/batches/:batchId/students/:studentId` | Destroy a single student by it's `studentId` and `batchId`* |
+| | | _* Needs authentication_ |
+
+## Evaluations
+
+**Note:** See `models/evaluations.js` for the Evaluation schema attributes.
+
+| HTTP Verb | Path | Description |
+|-----------|------|--------------|
+| `GET` | `/students/:studentId/evaluations` | Retrieve all evaluations for a specific `studentId` |
+| `POST` | `/students/:studentId/evaluations` | Create an evaluation for a specific `studentId`* |
+| `GET` | `/students/:studentId/evaluations/:evaluationId` | Retrieve a single evaluation by it's `evaluationId` and `studentId` |
+| `PUT` | `/students/:studentId/evaluations/:evaluationId` | Update an evaluation with a specific `evaluationId` and `studentId`* |
+| `PATCH` | `/students/:studentId/evaluations/:evaluationId` | Patch (partial update) an evaluation with a specific `evaluationId` and `studentId`* |
+| `DELETE` | `/students/:studentId/evaluations/:evaluationId` | Destroy a single evaluation by it's `evaluationId` and `studentId`* |
+| | | _* Needs authentication_ |
+
+_**Note**: Run `yarn run seed` to seed some initial batchs, students and evaluations._
