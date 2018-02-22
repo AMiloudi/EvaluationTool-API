@@ -6,9 +6,9 @@ const { Batch, Student } = require('../../models')
 const authenticate = passport.authorize('jwt', { session: false })
 
 const loadBatch = (req, res, next) => {
-  const id = req.params.id
+  const batchId = req.params.batchId
 
-  Batch.findById(id)
+  Batch.findById(batchId)
   .then((batch) => {
     req.batch = batch
     next()
