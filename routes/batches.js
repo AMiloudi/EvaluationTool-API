@@ -48,10 +48,10 @@ module.exports = io => {
           if (!batch) { return next() }
 
           const updatedBatch = {
-            classNumber: req.params.classNumber,
-            startDate:  req.params.startDate,
-            endDate:  req.params.endDate,
-          }
+           classNumber: req.body.classNumber,
+           startDate:  req.body.startDate,
+           endDate:  req.body.endDate,
+         }
 
           Batch.findByIdAndUpdate(batchId, updatedBatch, { new: true })
             .then((batch) => {

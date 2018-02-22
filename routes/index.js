@@ -1,17 +1,19 @@
 const batches = require('./batches')
-const batchesStudents = require('./batches/students')
+const batchStudents = require('./batches/students')
 const users = require('./users')
 const sessions = require('./sessions')
 const students = require('./students')
-const studentsEvaluations = require('./students/evaluations')
+const studentEvaluations = require('./students/evaluations')
 const evaluations = require('./evaluations')
+const batchEvaluations = require('./batches/evaluations')
 
 module.exports = {
   batches,
-  batchesStudents,
+  batchStudents,
   users,
   sessions,
   students,
-  studentsEvaluations,
-  evaluations
+  studentEvaluations,
+  evaluations,
+  batchEvaluations
 }
