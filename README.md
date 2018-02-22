@@ -49,10 +49,10 @@ _**Note**: See `db/seed.js` for an example._
 |-----------|------|--------------|
 | `GET` | `/batches/:batchId/students` | Retrieve all students for a specific `batchId` |
 | `POST` | `/batches/:batchId/students` | Create a student for a specific `batchId`* |
-| `GET` | `/batches/:batchId/students/:studentId` | Retrieve a single student by it's `studentId` and `batchId` |
-| `PUT` | `/batches/:batchId/students/:studentId` | Update a student with a specific `studentId` and `batchId`* |
-| `PATCH` | `/batches/:batchId/students/:studentId` | Patch (partial update) a student with a specific `studentId` and `batchId`* |
-| `DELETE` | `/batches/:batchId/students/:studentId` | Destroy a single student by it's `studentId` and `batchId`* |
+| `GET` | `/students/:studentId` | Retrieve a single student by it's `studentId` |
+| `PUT` | `/students/:studentId` | Update a student with a specific `studentId`* |
+| `PATCH` | `/students/:studentId` | Patch (partial update) a student with a specific `studentId`* |
+| `DELETE` | `/students/:studentId` | Destroy a single student by it's `studentId`* |
 | | | _* Needs authentication_ |
 
 ## Evaluations
@@ -63,10 +63,10 @@ _**Note**: See `db/seed.js` for an example._
 |-----------|------|--------------|
 | `GET` | `/students/:studentId/evaluations` | Retrieve all evaluations for a specific `studentId` |
 | `POST` | `/students/:studentId/evaluations` | Create an evaluation for a specific `studentId`* |
-| `GET` | `/students/:studentId/evaluations/:evaluationId` | Retrieve a single evaluation by it's `evaluationId` and `studentId` |
-| `PUT` | `/students/:studentId/evaluations/:evaluationId` | Update an evaluation with a specific `evaluationId` and `studentId`* |
-| `PATCH` | `/students/:studentId/evaluations/:evaluationId` | Patch (partial update) an evaluation with a specific `evaluationId` and `studentId`* |
-| `DELETE` | `/students/:studentId/evaluations/:evaluationId` | Destroy a single evaluation by it's `evaluationId` and `studentId`* |
+| `GET` | `/evaluations/:evaluationId` | Retrieve a single evaluation by it's `evaluationId` |
+| `PUT` | `/evaluations/:evaluationId` | Update an evaluation with a specific `evaluationId`* |
+| `PATCH` | `/evaluations/:evaluationId` | Patch (partial update) an evaluation with a specific `evaluationId`* |
+| `DELETE` | `/evaluations/:evaluationId` | Destroy a single evaluation by it's `evaluationId`* |
 | | | _* Needs authentication_ |
 
 _**Note**: Run `yarn run seed` to seed some initial batchs, students and evaluations._
