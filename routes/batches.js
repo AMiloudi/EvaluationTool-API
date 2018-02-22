@@ -40,10 +40,10 @@ module.exports = io => {
         .catch((error) => next(error))
     })
 
-    .patch('/batches/:id', authenticate, (req, res, next) => {
-      const id = req.params.id
+    .patch('/batches/:batchId', authenticate, (req, res, next) => {
+      const batchId = req.params.id
 
-      Batch.findById(id)
+      Batch.findById(batchId)
         .then((batch) => {
           if (!batch) { return next() }
 
@@ -61,8 +61,8 @@ module.exports = io => {
         })
         .catch((error) => next(error))
     })
-    .delete('/batches/:id', authenticate, (req, res, next) => {
-      const id = req.params.id
+    .delete('/batches/:batchId', authenticate, (req, res, next) => {
+      const batchId = req.params.id
       Batch.findByIdAndRemove(id)
         .then(() => {
           res.status = 200

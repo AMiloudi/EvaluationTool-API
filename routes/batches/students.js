@@ -31,12 +31,12 @@ const getStudents = (req, res, next) => {
 
 module.exports = io => {
   router
-  .get('/batches/:id/students', loadBatch, getStudents, (req, res, next) => {
+  .get('/batches/:batchId/students', loadBatch, getStudents, (req, res, next) => {
     if (!req.batch || !req.students) { return next() }
     res.json(req.students)
   })
 
-  .post('/batches/:id/students', authenticate, loadBatch, (req, res, next) => {
+  .post('/batches/:batchId/students', authenticate, loadBatch, (req, res, next) => {
     if (!req.batch) { return next() }
 
     const newStudent= {
@@ -52,7 +52,7 @@ module.exports = io => {
     .catch((error) => next(error))
   })
 
-  .patch('/batches/:id/students/:studentId', authenticate, (req, res, next) => {
+  .patch('/batches/:batchId/students/:studentId', authenticate, (req, res, next) => {
     const studentId = req.params.studentId
 
     Student.findById(studentId)
@@ -75,7 +75,7 @@ module.exports = io => {
   })
 
 
-  .delete('/batches/:id/students/:studentId', authenticate, (req, res, next) => {
+  .delete('/batches/:batchId/students/:studentId', authenticate, (req, res, next) => {
     const studentId = req.params.studentId
 
     Student.findByIdAndRemove(studentId)
