@@ -6,9 +6,9 @@ const {  Student, Evaluation } = require('../../models')
 const authenticate = passport.authorize('jwt', { session: false })
 
 const loadStudent = (req, res, next) => {
-  const id = req.params.id
+  const studentId = req.params.studentId
 
-  Student.findById(id)
+  Student.findById(studentId)
   .then((student) => {
     req.student = student
     next()

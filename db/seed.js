@@ -21,7 +21,7 @@ const createEvaluations = (token, studentId) => {
   .set('Authorization', `Bearer ${token}`)
   .send(evaluation)
   .then((res) => {
-    console.log('Evaluation ' + res.body.color + ' seeded for student ' + res.body.name)
+    console.log('Evaluation ' + res.body.color + ' seeded for student ' + res.body.studentId)
   })
   .catch((err) => {
     console.error('Error seeding evaluations!', err)
@@ -36,7 +36,7 @@ const createStudents = (token, batchId) => {
     .set('Authorization', `Bearer ${token}`)
     .send(student)
     .then((res) => {
-      console.log('Student ' + res.body.name + ' seeded in class ' + res.body.classNumber)
+      console.log('Student ' + res.body.name + ' seeded in class ' + res.body.batchId)
       return createEvaluations(token, res.body._id)
     })
     .catch((err) => {
