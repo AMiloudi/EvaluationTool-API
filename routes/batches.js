@@ -15,10 +15,10 @@ module.exports = io => {
         // Throw a 500 error if something goes wrong
         .catch((error) => next(error))
     })
-    .get('/batches/:id', (req, res, next) => {
-      const id = req.params.id
+    .get('/batches/:batchId', (req, res, next) => {
+      const batchId = req.params.batchId
 
-      Batch.findById(id)
+      Batch.findById(batchId)
         .then((batch) => {
           if (!batch) { return next() }
           res.json(batch)
@@ -41,7 +41,7 @@ module.exports = io => {
     })
 
     .patch('/batches/:batchId', authenticate, (req, res, next) => {
-      const batchId = req.params.id
+      const batchId = req.params.batchId
 
       Batch.findById(batchId)
         .then((batch) => {
@@ -53,7 +53,7 @@ module.exports = io => {
             endDate:  req.params.endDate,
           }
 
-          Batch.findByIdAndUpdate(id, updatedBatch, { new: true })
+          Batch.findByIdAndUpdate(batchId, updatedBatch, { new: true })
             .then((batch) => {
               res.json(batch)
             })
@@ -62,13 +62,13 @@ module.exports = io => {
         .catch((error) => next(error))
     })
     .delete('/batches/:batchId', authenticate, (req, res, next) => {
-      const batchId = req.params.id
-      Batch.findByIdAndRemove(id)
+      const batchId = req.params.batchId
+      Batch.findByIdAndRemove(batchId)
         .then(() => {
           res.status = 200
           res.json({
             message: 'Removed',
-            _id: id
+            _id: batchId
           })
         })
         .catch((error) => next(error))
