@@ -31,12 +31,12 @@ const getEvaluations = (req, res, next) => {
 
 module.exports = io => {
   router
-  .get('/students/:id/evaluations', loadStudent, getEvaluations, (req, res, next) => {
+  .get('/students/:studentId/evaluations', loadStudent, getEvaluations, (req, res, next) => {
     if (!req.student || !req.evaluations) { return next() }
     res.json(req.evaluations)
   })
 
-  .post('/students/:id/evaluations', authenticate, loadStudent, (req, res, next) => {
+  .post('/students/:studentId/evaluations', authenticate, loadStudent, (req, res, next) => {
     if (!req.student) { return next() }
 
     const newEvaluation= {
@@ -53,7 +53,7 @@ module.exports = io => {
     .catch((error) => next(error))
   })
 
-  .patch('/students/:id/evaluations/:evaluationId', authenticate, (req, res, next) => {
+  .patch('/students/:studentId/evaluations/:evaluationId', authenticate, (req, res, next) => {
       const evaluationId = req.params.evaluationId
 
     Evaluation.findById(evaluationId)
@@ -77,7 +77,8 @@ module.exports = io => {
   })
 
 
-  .delete('/students/:id/evaluations/:evaluationId', authenticate, (req, res, next) => {
+  .delete('/students/:studentId/evaluations/:evaluationId', authenticate, (req, res, next) => {
+
     const evaluationId = req.params.evaluationId
 
     Evaluation.findByIdAndRemove(evaluationId)
