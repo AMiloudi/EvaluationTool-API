@@ -7,7 +7,7 @@ const http = require('http')
 const socketAuth = require('./config/socket-auth')
 const socketIO = require('socket.io')
 
-const port = process.env.PORT || 3030
+const port = process.env.PORT || 3000
 
 const app = express()
 const server = http.Server(app)

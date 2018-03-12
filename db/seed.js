@@ -7,7 +7,7 @@ const evaluations = require('./fixtures/evaluations.json')
 
 
 const createUrl = (path) => {
-  return `${process.env.HOST || `http://localhost:${process.env.PORT || 3030}`}${path}`
+  return `${process.env.HOST || `http://localhost:${process.env.PORT || 3000}`}${path}`
 }
 
 
